@@ -1,0 +1,25 @@
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.ui.IPC;
+
+
+public interface ClickObject {
+	public String output ();
+}
+
+class ClickSwitch implements ClickObject {
+
+	private Device d;
+	public ClickSwitch (Device d, Backpack b){
+		this.d = d;
+		this.b = b;
+	}
+	
+	
+	
+	@Override
+	public String output() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}

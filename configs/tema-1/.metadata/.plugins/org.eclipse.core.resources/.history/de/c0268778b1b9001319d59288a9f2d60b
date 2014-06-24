@@ -1,0 +1,14 @@
+import com.cisco.pt.backpacks.framework.Backpack;
+import com.cisco.pt.backpacks.main.TesterMain;
+
+public class Test {
+
+	
+	public static void main(String[] args) throws Exception {
+		Backpack backpack = new TopologyExtractor();
+		backpack.run();
+		
+	}
+
+	
+}

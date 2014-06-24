@@ -1,0 +1,41 @@
+import org.apache.commons.logging.Log;
+
+import com.cisco.pt.ipc.events.TerminalLineEventRegistry;
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.sim.FrameInstance;
+import com.cisco.pt.ipc.sim.port.Link;
+import com.cisco.pt.ipc.sim.port.Port;
+import com.cisco.pt.ipc.system.Simulation;
+import com.cisco.pt.ipc.ui.IPC;
+import com.cisco.pt.ipc.ui.LogicalWorkspace;
+
+
+public class Experiment extends Backpack {
+
+	@Override
+	protected void internalRun() throws Exception {
+		Thread.sleep(5000);
+		IPC ipc =ipcFactory.getIPC();
+		// get a device from the topology
+		Device dev=ipc.network().getDevice("Switch0");
+		Port p = dev.getPort("FastEthernet0/2");
+		Link l = p.getLink();
+		
+		Port p1 = ipc.network().getDevice("Switch0").getPort("FastEthernet0/2");
+		Port p2 = ipc.network().getDevice("Switch2").getPort("FastEthernet0/2");		
+		System.out.println(ipc.network().getAccessMessage());
+		
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "Trial1.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

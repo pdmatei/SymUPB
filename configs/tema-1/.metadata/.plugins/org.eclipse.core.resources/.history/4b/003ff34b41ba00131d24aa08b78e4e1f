@@ -1,0 +1,32 @@
+import org.apache.commons.logging.Log;
+
+import com.cisco.pt.ipc.events.TerminalLineEventRegistry;
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.sim.port.Port;
+import com.cisco.pt.ipc.ui.IPC;
+
+
+public class Experiment extends Backpack {
+
+	@Override
+	protected void internalRun() throws Exception {
+		IPC ipc =ipcFactory.getIPC();
+		// get a device from the topology
+		Device dev=ipc.network().getDevice("Switch0");
+		Port p = dev.getPort("Fa0/0");
+		TerminalLineEventRegistry tler = this.packetTracerSession.getEventManager().getTerminalLineEvents();
+		System.out.println(dev.getPortCount());
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "Trial1.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

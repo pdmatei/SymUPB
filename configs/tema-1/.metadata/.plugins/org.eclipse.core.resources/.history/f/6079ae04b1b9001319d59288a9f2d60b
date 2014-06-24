@@ -1,0 +1,33 @@
+import org.apache.commons.logging.Log;
+
+
+
+public class TopologyExtractor extends Backpack{
+
+	@Override
+	protected void internalRun() throws Exception {
+		try {
+			// do nice code
+			
+		} catch (Throwable t) {
+			if (t instanceof ThreadDeath) {
+				throw (ThreadDeath) t;
+			}
+			System.out.println("\n\nError:  " + t.getMessage() + "\n\n" + 
+					t + "\n\n");
+			t.printStackTrace(System.out);
+		}
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "topology.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

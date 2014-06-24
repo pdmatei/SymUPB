@@ -1,0 +1,6 @@
+
+public interface ClickObject {
+	public String output ();
+}
+
+

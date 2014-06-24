@@ -1,0 +1,6 @@
+#!/bin/bash
+
+Xvfb :8 -screen 0 1024x768x16 &> /dev/null &
+export DISPLAY=:8
+java -jar TesterTema1.jar lol.pkt lol.txt
+killall Xvfb

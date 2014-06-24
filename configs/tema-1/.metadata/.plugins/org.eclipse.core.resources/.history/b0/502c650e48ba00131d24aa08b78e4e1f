@@ -1,0 +1,44 @@
+import java.io.*;
+
+public class Test {
+	/**
+	 * Loads the UPB configuration from Packet Tracer
+	 * @throws Exception 
+	 */
+	
+	public static void runCmd(String cmd){
+		final String dosCommand = "cmd /c dir /s";
+	    final String location = "C:\\Users\\Matei\\Dropbox\\papers\\Costin\\HaskellGenerator\\ciscoconfparse-0.9.6\\";
+	      try {
+	         final Process process = Runtime.getRuntime().exec(dosCommand + " " + location);
+	         final InputStream in = process.getInputStream();
+	         int ch;
+	         while((ch = in.read()) != -1) {
+	            System.out.print((char)ch);
+	         }
+	      } catch (IOException e) {
+	         e.printStackTrace();
+	      }
+	}
+	
+	public static void loadUPB () throws Exception{
+		System.out.println("Starting packet tracer...");
+		Backpack backpack = new TopologyExtractor();
+		backpack.run();
+		System.out.println("Closing.");
+		backpack.closePacketTracer();
+	}
+	public static void loadExperiment () throws Exception{
+		Backpack backpack = new Experiment();
+		backpack.run();
+		backpack.closePacketTracer();
+	}
+	
+	
+	public static void main(String[] args) throws Exception {
+		//loadUPB();
+		loadExperiment();
+	}
+
+	
+}

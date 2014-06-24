@@ -1,0 +1,19 @@
+public class Test {
+	/**
+	 * Loads the UPB configuration from Packet Tracer
+	 */
+	public static void loadUPB (){
+		System.out.println("Starting packet tracer...");
+		Backpack backpack = new TopologyExtractor();
+		backpack.run();
+		System.out.println("Closing.");
+		backpack.closePacketTracer();
+	}
+	
+	public static void main(String[] args) throws Exception {
+		
+		
+	}
+
+	
+}

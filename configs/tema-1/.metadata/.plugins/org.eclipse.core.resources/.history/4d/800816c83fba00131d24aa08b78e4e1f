@@ -1,0 +1,14 @@
+public class Test {
+
+	
+	public static void main(String[] args) throws Exception {
+		System.out.println("Starting packet tracer...");
+		Backpack backpack = new TopologyExtractor();
+		backpack.run();
+		System.out.println("Closing.");
+		backpack.closePacketTracer();
+		
+	}
+
+	
+}

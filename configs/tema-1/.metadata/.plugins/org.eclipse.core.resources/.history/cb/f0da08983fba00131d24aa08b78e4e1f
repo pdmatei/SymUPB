@@ -1,0 +1,23 @@
+import org.apache.commons.logging.Log;
+
+
+public class Experiment extends Backpack {
+
+	@Override
+	protected void internalRun() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "Trial1.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

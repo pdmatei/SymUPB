@@ -1,0 +1,5 @@
+
+build-post: run
+
+run:
+	bash check

@@ -1,0 +1,9 @@
+
+public class Names {
+	public final String path = "../../../topo/";
+	public final String macPrefix = "Mac-";
+	public final String spanPrefix = "Span-";
+	public final String suffix =".txt";
+	public final String wireFile = "Links.txt";
+	public final String deviceFile = "Devices.txt";
+}

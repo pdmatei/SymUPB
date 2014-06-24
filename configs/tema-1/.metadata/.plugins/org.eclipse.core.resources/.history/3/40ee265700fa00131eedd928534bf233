@@ -1,0 +1,34 @@
+import com.cisco.pt.ipc.events.TerminalLineEventRegistry;
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.ui.IPC;
+
+
+public interface ClickObject {
+	public String output ();
+}
+
+class ClickSwitch implements ClickObject {
+
+	private Device d;
+	private Backpack b;
+	public ClickSwitch (Device d, Backpack b){
+		this.d = d;
+		this.b = b;
+	}
+	
+	public String itemToHaskell(String item){
+		
+		TerminalLineEventRegistry tler = b.packetTracerSession.getEventManager().getTerminalLineEvents();
+		String output = PTUtils.enterCommand(d,tler,"show spanning-tree",36000);
+		
+
+	}
+	
+	
+	@Override
+	public String output() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}

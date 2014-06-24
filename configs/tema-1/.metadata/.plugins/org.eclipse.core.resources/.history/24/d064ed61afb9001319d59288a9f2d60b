@@ -1,0 +1,32 @@
+import java.io.File;
+
+import com.cisco.pt.ipc.IPCFactory;
+import com.cisco.pt.launcher.PacketTracerLauncher;
+import com.cisco.pt.ptmp.PacketTracerSession;
+import com.cisco.pt.ptmp.PacketTracerSessionFactory;
+import com.cisco.pt.ptmp.impl.PacketTracerSessionFactoryImpl;
+
+
+public class Test {
+
+	protected static String hostName = "localhost";
+	protected static int port = 39000;
+	
+	public static void main(String[] args) throws Exception {
+		
+		// creating a launcher for packet tracer
+		PacketTracerLauncher launcher = PacketTracerLauncher.getInstance();
+		// creating a process by launching packet tracer
+		Process packetTracerProcess =  launcher.launch(new File("topology"));
+		
+		PacketTracerSessionFactory sessionFactory = PacketTracerSessionFactoryImpl.getInstance();
+		PacketTracerSession packetTracerSession = createDefaultSession(sessionFactory);
+		IPCFactory ipcFactory = new IPCFactory(packetTracerSession);
+		
+	}
+
+	protected static PacketTracerSession createDefaultSession(
+			PacketTracerSessionFactory sessionFactory) throws Exception {
+		return sessionFactory.openSession(hostName, port);
+	}
+}

@@ -1,0 +1,8 @@
+mport com.cisco.pt.ipc.sim.Device;
+
+
+public class ReadMacSpan {
+	public ReadMacSpan(Device d){
+		
+	}
+}

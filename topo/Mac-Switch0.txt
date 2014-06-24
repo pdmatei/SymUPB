@@ -1,0 +1,18 @@
+show mac-address-table
+          Mac Address Table
+-------------------------------------------
+
+Vlan    Mac Address       Type        Ports
+----    -----------       --------    -----
+
+   1    0009.7ce8.5901    DYNAMIC     Fa0/1
+   1    00e0.8f2e.d002    DYNAMIC     Fa0/2
+   5    0009.7ce8.5901    DYNAMIC     Fa0/1
+   5    00d0.bca7.9546    DYNAMIC     Fa0/23
+   5    00e0.8f2e.d002    DYNAMIC     Fa0/2
+   5    00e0.a3aa.e980    DYNAMIC     Fa0/22
+   6    0009.7ce8.5901    DYNAMIC     Fa0/1
+   6    00e0.8f2e.d002    DYNAMIC     Fa0/2
+  99    0009.7ce8.5901    DYNAMIC     Fa0/1
+  99    00e0.8f2e.d002    DYNAMIC     Fa0/2
+Switch>

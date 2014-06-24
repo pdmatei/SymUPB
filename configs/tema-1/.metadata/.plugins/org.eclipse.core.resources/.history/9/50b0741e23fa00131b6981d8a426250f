@@ -1,0 +1,132 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.sim.Network;
+import com.cisco.pt.ipc.sim.port.Port;
+import com.cisco.pt.ipc.ui.IPC;
+
+class Wire {
+	private Port p1;
+	private Port p2;
+
+	public Wire (Port p1, Port p2){
+		this.p1 = p1;
+		this.p2 = p2;
+	}
+	@Override
+	public String toString(){
+		return p1.getOwnerDevice().getName()+":"+p1.getName()+" "+p2.getOwnerDevice().getName()+":"+p2.getName();
+	}
+}
+/* models an abstract serializer */
+class ItemWriter {
+	private BufferedWriter bw;
+	public ItemWriter (String src){
+		File f = new File(src);
+		try {
+			// if file doesnt exists, then create it
+			if (!f.exists()) {
+				f.createNewFile();
+			}
+	
+			BufferedWriter bw = new BufferedWriter(new FileWriter(f.getAbsoluteFile()));
+			this.bw = bw;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void write (String str){
+		try {
+			bw.write(str);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void close (){
+		try {
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+
+public class TopologyExtractor extends Backpack {
+
+	private String path = "../../";
+	private String macPrefix = "Mac-";
+	private String spanPrefix = "Span-";
+	private String wireFile = "Links.txt";
+	private String deviceFile = "Devices.txt";
+	
+	@Override
+	protected void internalRun() throws Exception {
+		Thread.sleep(21000);
+		List<Device> devices = getDevices();
+		List<Wire> wires = getWires();
+		ItemWriter devs = new ItemWriter(path+deviceFile);
+		for (Device d:devices){
+			devs.write(d.getName()+" "+d.getType());
+		}
+		
+	}
+	
+	private List<Device> getDevices (){
+		IPC ipc =ipcFactory.getIPC();
+		List<Device> dl = new LinkedList<Device>();
+		Network net = ipc.network();
+		
+		int nrDevices = net.getDeviceCount();
+		for (int i=0; i<nrDevices; i++)
+			dl.add(net.getDeviceAt(i));
+		return dl;
+	}
+	
+	private List<Wire> getWires (){
+		IPC ipc =ipcFactory.getIPC();
+		//build complete active port list
+		LinkedList<Port> pl = new LinkedList<Port>();
+		Network net = ipc.network();
+		
+		for(Device d:getDevices()){
+			//System.out.println(d.getName());
+			int nrPorts = d.getPortCount();
+			for (int j=0; j<nrPorts; j++){
+				Port p = d.getPortAt(j);
+				if (p.isPortUp())
+					pl.add(p);
+			}
+		}
+		//build complete link list
+		LinkedList<Wire> wl = new LinkedList<Wire>();
+		for (Port p1:pl){
+			for (Port p2:pl){
+				if (p1 != p2 && p1.getLink().getObjectUUID().equals(p2.getLink().getObjectUUID())){
+					wl.add(new Wire(p1,p2));
+				}
+			}
+		}
+		return wl;
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "Trial1.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

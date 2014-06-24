@@ -1,0 +1,43 @@
+import java.io.*;
+
+public class Test {
+	/**
+	 * Loads the UPB configuration from Packet Tracer
+	 * @throws Exception 
+	 */
+	
+	public static runCmd(String cmd){
+	      final String location = "C:\\WINDOWS";
+	      try {
+	         final Process process = Runtime.getRuntime().exec(cmd + " " + location);
+	         final InputStream in = process.getInputStream();
+	         int ch;
+	         while((ch = in.read()) != -1) {
+	            System.out.print((char)ch);
+	         }
+	      } catch (IOException e) {
+	         e.printStackTrace();
+	      }
+	}
+	
+	public static void loadUPB () throws Exception{
+		System.out.println("Starting packet tracer...");
+		Backpack backpack = new TopologyExtractor();
+		backpack.run();
+		System.out.println("Closing.");
+		backpack.closePacketTracer();
+	}
+	public static void loadExperiment () throws Exception{
+		Backpack backpack = new Experiment();
+		backpack.run();
+		backpack.closePacketTracer();
+	}
+	
+	
+	public static void main(String[] args) throws Exception {
+		//loadUPB();
+		loadExperiment();
+	}
+
+	
+}

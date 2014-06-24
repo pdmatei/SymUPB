@@ -1,0 +1,46 @@
+import org.apache.commons.logging.Log;
+
+import com.cisco.pt.ipc.events.TerminalLineEventRegistry;
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.ui.IPC;
+
+
+
+public class TopologyExtractor extends Backpack{
+
+	@Override
+	protected void internalRun() throws Exception {
+		try {
+			IPC ipc =ipcFactory.getIPC();
+			// get a device from the topology
+			Device d=ipc.network().getDevice("SW-EG32");
+			System.out.println(d.getModel());
+			
+			
+			// execute a command on a device from the topology
+			TerminalLineEventRegistry tler = this.packetTracerSession.getEventManager().getTerminalLineEvents();
+			String output = 
+			
+			
+		} catch (Throwable t) {
+			if (t instanceof ThreadDeath) {
+				throw (ThreadDeath) t;
+			}
+			System.out.println("\n\nError:  " + t.getMessage() + "\n\n" + 
+					t + "\n\n");
+			t.printStackTrace(System.out);
+		}
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "topology.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

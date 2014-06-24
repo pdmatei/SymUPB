@@ -1,0 +1,19 @@
+import com.cisco.pt.ipc.ui.IPC;
+
+
+public interface ClickObject {
+	public String output ();
+}
+
+class ClickSwitch implements ClickObject {
+
+	public ClickSwitch (IPC ipc){
+		
+	}
+	@Override
+	public String output() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}

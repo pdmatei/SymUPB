@@ -1,0 +1,16 @@
+Switch0:FastEthernet0/1 Switch1:FastEthernet0/1
+Switch0:FastEthernet0/2 Switch2:FastEthernet0/2
+Switch0:FastEthernet0/22 PC0:FastEthernet
+Switch0:FastEthernet0/23 PC2:FastEthernet
+Switch1:FastEthernet0/1 Switch0:FastEthernet0/1
+Switch1:FastEthernet0/3 Switch2:FastEthernet0/3
+Switch1:FastEthernet0/23 PC3:FastEthernet
+Switch1:FastEthernet0/24 PC1:FastEthernet
+Switch2:FastEthernet0/2 Switch0:FastEthernet0/2
+Switch2:FastEthernet0/3 Switch1:FastEthernet0/3
+Switch2:FastEthernet0/24 Server0:FastEthernet
+PC0:FastEthernet Switch0:FastEthernet0/22
+PC1:FastEthernet Switch1:FastEthernet0/24
+PC2:FastEthernet Switch0:FastEthernet0/23
+PC3:FastEthernet Switch1:FastEthernet0/23
+Server0:FastEthernet Switch2:FastEthernet0/24

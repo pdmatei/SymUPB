@@ -1,0 +1,8 @@
+
+public interface ClickObject {
+	public String output ();
+}
+
+class ClickSwitch implements ClickObject {
+	
+}

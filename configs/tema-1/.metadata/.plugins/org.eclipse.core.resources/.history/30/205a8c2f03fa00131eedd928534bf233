@@ -1,0 +1,68 @@
+import java.io.IOException;
+import java.io.InputStream;
+
+import com.cisco.pt.ipc.enums.DeviceType;
+import com.cisco.pt.ipc.events.TerminalLineEventRegistry;
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.ui.IPC;
+
+
+public interface ClickObject {
+	public String output ();
+}
+
+
+class ClickObjectFactory {
+	public static ClickObject build (Device d, Backpack b){
+		DeviceType t = d.getType();
+		if (t.equals(t.SWITCH)){
+			return new ClickSwitch(d,b);
+		}
+		return null;
+	}
+}
+
+class ClickSwitch implements ClickObject {
+
+	private Device d;
+	private Backpack b;
+	
+	public ClickSwitch (Device d, Backpack b){
+		this.d = d;
+		this.b = b;
+		
+		runPythonScript();
+	}
+	
+	public String itemToHaskell(String item){
+		
+		TerminalLineEventRegistry tler = b.packetTracerSession.getEventManager().getTerminalLineEvents();
+		String output = PTUtils.enterCommand(d,tler,"show "+item,36000);
+		runPythonScript();
+		return null;
+	}
+	
+	public void runPythonScript (String param){
+		String location = "C:\\Users\\Matei\\Dropbox\\papers\\Costin\\HaskellGenerator\\ciscoconfparse-0.9.6\\";
+		String[] dosCommand = {"cmd.exe", "/c", location+"generateMac.bat \""+param+"\""};
+	      try {
+	         final Process process = Runtime.getRuntime().exec(dosCommand);
+	         final InputStream in = process.getInputStream();
+	         int ch;
+	         System.out.println("Shell output:");
+	         while((ch = in.read()) != -1) {
+	            System.out.print((char)ch);
+	         }
+	      } catch (IOException e) {
+	         e.printStackTrace();
+	      }
+	}
+	
+	
+	@Override
+	public String output() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+}

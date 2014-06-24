@@ -1,0 +1,70 @@
+import java.io.*;
+import org.apache.commons.logging.Log;
+import com.cisco.pt.ipc.events.TerminalLineEventRegistry;
+import com.cisco.pt.ipc.sim.Device;
+import com.cisco.pt.ipc.ui.IPC;
+
+
+
+public class TopologyExtractor extends Backpack{
+
+	private final String [] devices = new String[] {"SW-EG32","SW-EG31","SW-EG30","SW-V1","Virtual SW","SW-C1","SW-C2","Switch","SW-EF00",
+			"SW-ED10","SW-ED20","SW-ED30","SW-ED40","SW-EC10","SW-EF01","SW-EF20","SW-EC11","SW-EF02"};
+	
+	private void generateOutput (String d){
+		IPC ipc =ipcFactory.getIPC();
+		// get a device from the topology
+		Device dev=ipc.network().getDevice(d);
+		TerminalLineEventRegistry tler = this.packetTracerSession.getEventManager().getTerminalLineEvents();
+		String span = PTUtils.enterCommand(dev,tler,"show spanning-tree",36000);
+		String mac = PTUtils.enterCommand(dev,tler,"show mac-addresses",36000);
+		
+		File fSpan = new File("../Span-"+d+".txt");
+		File fMac = new File("../Mac-"+d+".txt");
+		 
+		// if file doesnt exists, then create it
+		if (!fSpan.exists()) {
+			fSpan.createNewFile();
+		}
+		if (!fMac.exists()) {
+			fMac.createNewFile();
+		}
+
+		BufferedWriter bwSpan = new BufferedWriter(new FileWriter(fSpan.getAbsoluteFile()));
+		BufferedWriter bwMac = new BufferedWriter(new FileWriter(fMac.getAbsoluteFile()));
+		bwSpan.write(span);
+		bwMac.write(mac);
+		bwSpan.close();
+		bwMac.close();
+	}
+	
+	@Override
+	protected void internalRun() throws Exception {
+		try {
+			
+		
+			
+			
+			
+		} catch (Throwable t) {
+			if (t instanceof ThreadDeath) {
+				throw (ThreadDeath) t;
+			}
+			System.out.println("\n\nError:  " + t.getMessage() + "\n\n" + 
+					t + "\n\n");
+			t.printStackTrace(System.out);
+		}
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "topology.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

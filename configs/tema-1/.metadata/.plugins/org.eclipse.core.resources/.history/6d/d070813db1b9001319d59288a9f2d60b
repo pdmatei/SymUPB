@@ -1,0 +1,37 @@
+import org.apache.commons.logging.Log;
+
+import com.cisco.pt.ipc.ui.IPC;
+
+
+
+public class TopologyExtractor extends Backpack{
+
+	@Override
+	protected void internalRun() throws Exception {
+		try {
+			IPC ipc =ipcFactory.getIPC();
+			// do nice code
+			ipc.network().getDevice("SW-EG32");
+			
+		} catch (Throwable t) {
+			if (t instanceof ThreadDeath) {
+				throw (ThreadDeath) t;
+			}
+			System.out.println("\n\nError:  " + t.getMessage() + "\n\n" + 
+					t + "\n\n");
+			t.printStackTrace(System.out);
+		}
+	}
+
+	@Override
+	protected String getTargetFile() throws Exception {
+		return "topology.pkt";
+	}
+
+	@Override
+	protected Log getLog() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
