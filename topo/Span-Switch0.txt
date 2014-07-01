@@ -14,8 +14,8 @@ VLAN0001
 
 Interface        Role Sts Cost      Prio.Nbr Type
 ---------------- ---- --- --------- -------- --------------------------------
-Fa0/1            Desg FWD 19        128.1    P2p
 Fa0/2            Root FWD 19        128.2    P2p
+Fa0/1            Desg FWD 19        128.1    P2p
 
 VLAN0005
   Spanning tree enabled protocol ieee
@@ -32,8 +32,8 @@ VLAN0005
 
 Interface        Role Sts Cost      Prio.Nbr Type
 ---------------- ---- --- --------- -------- --------------------------------
-Fa0/1            Desg FWD 19        128.1    P2p
 Fa0/2            Root FWD 19        128.2    P2p
+Fa0/1            Desg FWD 19        128.1    P2p
 Fa0/22           Desg FWD 19        128.22   P2p
 Fa0/23           Desg FWD 19        128.23   P2p
 
@@ -52,8 +52,8 @@ VLAN0006
 
 Interface        Role Sts Cost      Prio.Nbr Type
 ---------------- ---- --- --------- -------- --------------------------------
-Fa0/1            Desg FWD 19        128.1    P2p
 Fa0/2            Root FWD 19        128.2    P2p
+Fa0/1            Desg FWD 19        128.1    P2p
 
 VLAN0099
   Spanning tree enabled protocol ieee
@@ -70,9 +70,7 @@ VLAN0099
 
 Interface        Role Sts Cost      Prio.Nbr Type
 ---------------- ---- --- --------- -------- --------------------------------
-Fa0/1            Desg FWD 19        128.1    P2p
 Fa0/2            Root FWD 19        128.2    P2p
+Fa0/1            Desg FWD 19        128.1    P2p
 
-Switch>
-Switch> 
 Switch>

@@ -1,8 +1,0 @@
-show mac-address-table
-          Mac Address Table
--------------------------------------------
-
-Vlan    Mac Address       Type        Ports
-----    -----------       --------    -----
-
-Switch>

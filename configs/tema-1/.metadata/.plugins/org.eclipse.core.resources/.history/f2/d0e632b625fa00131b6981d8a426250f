@@ -1,9 +1,0 @@
-
-public class Names {
-	public static final String PATH = "../../../topo/";
-	public static final String MAC_PREFIX = "Mac-";
-	public static final String spanPrefix = "Span-";
-	public static final String suffix =".txt";
-	public static final String wireFile = "Links.txt";
-	public static final String deviceFile = "Devices.txt";
-}
