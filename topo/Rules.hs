@@ -121,29 +121,42 @@ outputOnPort r p = let m _ = True
 -- takes a rule and input-output ports
 inoutPort :: Port -> Port -> Rule -> Rule
 inoutPort pin pout r = outputOnPort (inputOnPort r pin) pout                  
-
-{-
-   A pipeline receives a list [f1, ..., fn] of flow conditions and builds the pipeline rule, which takes input f, and outputs:
-   f n f1 U ((f \ f1) n f2) U ... U (f \ f1 \ ... \ fn-1) n fn U f \ f1 \ ... \ fn   
-   
-   But here, fx \ fy is not clever difference. It only removes bindings.
-   Hence, we implement fx \ fy as fx n (~ fy)
--}
-
 {-
 
    ASA Cuisine
    
    -}
 
+{-
+    A pipeline receives a list [f1, ..., fn] of flow conditions and builds the pipeline rule, which takes input f, and outputs:
+   f n f1 U ((f \ f1) n f2) U ... U (f \ f1 \ ... \ fn-1) n fn    
+   
+   But here, fx \ fy is not clever difference. It only removes bindings.
+   Hence, we implement fx \ fy as fx n (~ fy)
+   f n f1   U
+   f n ~f1 n f2   U
+   f n ~f1 n ~f2 n f3 
+   ...
+   f n ~ ...  n ~fn-1 n fn
+-}             
 pipeLine :: [Flow] -> Rule
 pipeLine fl = let 
                 fx `dif` fy = fx `cap` (complement fy)
                 diff f fx (fh:t) = if fx == fh then f `cap` fh else diff (f `dif` fh) fx t 
-                terms f = (map (\fx ->diff f fx fl) fl) ++ [(foldl dif f fl)]
+                terms f = (map (\fx ->diff f fx fl) fl) -- ++ [(foldl dif f fl)]
                 reunion f = foldl (.>.) finit (terms f)
               in (matchAny, reunion)
-              
+
+fx `dif` fy = fx `cap` (complement fy)              
+diff f fx (fh:t) = if fx == fh then f `cap` fh else diff (f `dif` fh) fx t 
+                              
+pip fl = let 
+                fx `dif` fy = fx `cap` (complement fy)
+                diff f fx (fh:t) = if fx == fh then f `cap` fh else diff (f `dif` fh) fx t 
+                terms f = (map (\fx ->diff f fx fl) fl) -- ++ [(foldl dif f fl)]
+                reunion f = foldl (.>.) finit (terms f)
+              in terms--(matchAny, reunion)
+
               
 pipe_test = 
     let flowList = map (\vb -> vb .>. finit) ["macSrc" .=. "A", "macDst" .=. "B"]
@@ -171,38 +184,7 @@ acl s_pd s_proto s_l3_src s_l4_src s_l3_dst s_l4_dst =
 --             permit/deny  l4 protocol    source ip   source l4 port   dest ip    dest l4 port   condition
 access_list :: String ->    Flow ->        Flow ->     Flow ->          Flow ->    Flow ->        Flow
 access_list pd proto l3_src l4_src l3_dst l4_dst = 
-    let f = proto .>. l3_src .>. l4_src .>. l3_dst .>. l4_dst .>. finit
+    let l = [proto, l3_src, l4_src, l3_dst, l4_dst]
+        f = foldl cap finit l 
     in if pd == "permit" then f else complement f
-
--- the global     
-    
--- hasPort :: Flow -> Port -> Bool
--- hasPort f p = containsBinding ("Port" `Bind` (CVal p)) f
--- setPort f p = force_push ("Port" `Bind` (CVal p)) f
-
-
--- fil_ovr_rule :: Port -> Port -> [[VarBinding]] -> [VarBinding] -> Rule
--- fil_ovr_rule inport outport flist ovrlist = let (_, afil) = fil_rule $ Flow 0 (fromLists flist)
-                                                -- (_, aovr) = ovr_rule ovrlist
-                                                -- m f = f `hasPort` inport 
-                                                -- a f = setPort (aovr $ afil f) outport
-                                            -- in (m,a)
-                                                
-    
--- takes a condition which must be satisfied, a filtering flow, and a list of overwriting bindings
--- cond_fil_ovr_rule :: [[VarBinding]] -> [[VarBinding]] -> [VarBinding] -> Rule
--- cond_fil_ovr_rule cond flist ovrlist = let r1 = fil_rule $ Flow 0 (fromLists flist)
-                                           -- r2 = ovr_rule ovrlist
-                                           -- r3 = let m f = f `isSubset` (Flow 0 $ fromLists cond)
-                                                    -- a f = f
-                                                -- in (m,a)
-                                       -- in r3 `comp` (r1 `comp` r2)
-                                       
-    
--- generates a flow associated to a communication with a fixed destination 
--- send_pkt :: String -> String -> String -> Flow
--- send_pkt source_ip dest_ip dest_tcp = 
-    -- let init = Flow 0 Set.empty
-        -- (tau,var) = gen init
-    -- in push ("Dest-IP" `Bind` (CVal dest_ip)) $ push ("Source-IP" `Bind` (CVal source_ip)) $ push ("Source-TCP" `Bind` (CVar var)) $ push ("Dest-TCP" `Bind` (CVal dest_tcp)) tau
 

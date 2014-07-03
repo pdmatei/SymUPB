@@ -1,0 +1,18 @@
+access-list nat-ED205 extended permit ip host 172.16.14.210 any
+access-list nat-ED205 extended permit ip any host 172.16.14.210
+access-list nat-ED205 extended permit ip host 141.85.225.150 any
+access-list nat-ED205 extended permit ip any host 141.85.225.150
+access-list incoming extended permit ip any host 141.85.225.150
+//access-list incoming extended permit icmp any any time-exceeded
+//access-list incoming extended permit icmp any any unreachable
+access-list incoming extended permit icmp host 37.128.224.6 any
+access-list incoming extended permit ip any 141.85.228.0 255.255.255.192
+access-list incoming extended permit tcp any host 141.85.225.151 eq ftp
+access-list incoming extended permit tcp any host 141.85.225.151 eq www
+access-list incoming extended permit tcp any host 141.85.225.151 eq 5000
+access-list incoming extended permit tcp any host 141.85.225.151 eq 5001
+access-list incoming extended permit tcp any host 141.85.225.151 eq https
+access-list incoming extended permit tcp any host 141.85.225.152 eq ssh
+access-list incoming extended permit tcp any host 141.85.225.153
+access-list CAPTURE extended permit tcp any any eq tacacs
+access-list CAPTURE extended permit tcp any eq tacacs any

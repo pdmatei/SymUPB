@@ -1,0 +1,295 @@
+/* *******************
+fw1# sh run
+: Saved
+:
+ASA Version 8.0(4)
+!
+hostname fw1
+domain-name cs.pub.ro
+enable password *********** encrypted
+passwd ************ encrypted
+names
+!
+interface Ethernet0/0
+ nameif outside
+ security-level 0
+ ip address 141.85.225.20 255.255.255.0
+!
+interface Ethernet0/1
+ description Acces profesori
+ no nameif
+ no security-level
+ no ip address
+!
+interface Ethernet0/1.254
+ vlan 254
+ nameif CATC-CCNA
+ security-level 80
+ ip address 192.168.254.254 255.255.255.0
+!
+interface Ethernet0/1.300
+ description Voice Network
+ vlan 300
+ nameif VOICE
+ security-level 85
+ no ip address
+!
+interface Ethernet0/1.301
+ vlan 301
+ nameif WL
+ security-level 70
+ ip address 172.16.103.254 255.255.252.0
+!
+interface Ethernet0/1.302
+ description Acces profesori
+ vlan 302
+ nameif PROF_CS
+ security-level 80
+ ip address 172.16.2.254 255.255.255.0
+!
+interface Ethernet0/1.312
+ vlan 312
+ nameif PROF_AUTOM
+ security-level 80
+ ip address 172.16.12.254 255.255.255.0
+!
+interface Ethernet0/1.321
+ vlan 321
+ nameif DECANAT
+ security-level 80
+ ip address 172.16.21.254 255.255.255.0
+!
+interface Ethernet0/2
+ no nameif
+ no security-level
+ no ip address
+!
+interface Ethernet0/2.304
+ vlan 304
+ nameif LABS_CS
+ security-level 5
+ ip address 172.16.4.254 255.255.252.0
+!
+interface Ethernet0/2.314
+ vlan 314
+ nameif LABS_AUTOM
+ security-level 5
+ ip address 172.16.14.254 255.255.254.0
+!
+interface Ethernet0/3
+ description ==>TRUNK TO OTHER VLANs<==
+ no nameif
+ no security-level
+ no ip address
+!
+interface Ethernet0/3.281
+ vlan 281
+ nameif ed301-281
+ security-level 10
+ ip address 141.85.228.1 255.255.255.192
+!
+interface Ethernet0/3.777
+ vlan 777
+ nameif AWG2012
+ security-level 10
+ ip address 172.16.77.254 255.255.255.0
+!
+interface Management0/0
+ nameif management
+ security-level 100
+ ip address 192.168.137.14 255.255.255.0
+!
+ftp mode passive
+clock timezone EET 2
+clock summer-time EEDT recurring last Sun Mar 3:00 last Sun Oct 3:00
+dns domain-lookup outside
+dns server-group DefaultDNS
+ name-server 141.85.226.5
+ name-server 141.85.241.113
+ domain-name cs.pub.ro
+same-security-traffic permit intra-interface
+*/
+
+access-list nat-ED205 extended permit ip host 172.16.14.210 any
+access-list nat-ED205 extended permit ip any host 172.16.14.210
+access-list nat-ED205 extended permit ip host 141.85.225.150 any
+access-list nat-ED205 extended permit ip any host 141.85.225.150
+access-list incoming extended permit ip any host 141.85.225.150
+// access-list incoming remark Allow ICMP for traceroute (lazy admin)
+access-list incoming extended permit icmp any any time-exceeded
+access-list incoming extended permit icmp any any unreachable
+access-list incoming extended permit icmp host 37.128.224.6 any
+access-list incoming extended permit ip any 141.85.228.0 255.255.255.192
+access-list incoming extended permit tcp any host 141.85.225.151 eq ftp
+access-list incoming extended permit tcp any host 141.85.225.151 eq www
+access-list incoming extended permit tcp any host 141.85.225.151 eq 5000
+access-list incoming extended permit tcp any host 141.85.225.151 eq 5001
+access-list incoming extended permit tcp any host 141.85.225.151 eq https
+access-list incoming extended permit tcp any host 141.85.225.152 eq ssh
+access-list incoming extended permit tcp any host 141.85.225.153
+access-list CAPTURE extended permit tcp any any eq tacacs
+access-list CAPTURE extended permit tcp any eq tacacs any
+
+/*
+access-list SPLIT_ACL standard permit 141.85.224.0 255.255.224.0
+access-list SPLIT_ACL standard permit 192.168.137.0 255.255.255.0
+access-list SPLIT_ACL standard permit 192.168.237.0 255.255.255.0
+access-list SPLIT_ACL standard permit 141.85.37.0 255.255.255.0
+access-list nat-CBUIU extended permit tcp host 172.16.12.172 eq ftp any
+access-list nat-CBUIU extended permit tcp any host 172.16.12.172 eq ftp
+access-list nat-CBUIU extended permit tcp host 172.16.12.172 eq www any
+access-list nat-CBUIU extended permit tcp any host 172.16.12.172 eq www
+access-list nat-CBUIU extended permit ip host 172.16.12.172 any
+access-list nat-CBUIU extended permit ip any host 172.16.12.172
+access-list NAT-RD-Temp extended permit tcp any host 172.16.5.222 eq ssh
+access-list NAT-RD-Temp extended permit tcp host 172.16.5.222 any
+access-list NAT-RD-Temp extended permit ip host 172.16.5.222 any
+access-list NAT-RD-Temp extended permit ip any host 172.16.5.222
+pager lines 24
+logging enable
+logging timestamp
+logging buffer-size 16384
+logging buffered notifications
+logging trap notifications
+logging facility 23
+logging host management 192.168.137.29
+mtu outside 1500
+mtu CATC-CCNA 1500
+mtu VOICE 1500
+mtu WL 1500
+mtu PROF_CS 1500
+mtu PROF_AUTOM 1500
+mtu DECANAT 1500
+mtu LABS_CS 1500
+mtu LABS_AUTOM 1500
+mtu ed301-281 1500
+mtu AWG2012 1500
+mtu management 1500
+ip local pool IPSEC_POOL 10.12.14.10-10.12.14.20
+no failover
+icmp unreachable rate-limit 1 burst-size 1
+asdm image disk0:/asdm-613.bin
+no asdm history enable
+arp timeout 14400
+global (outside) 1 141.85.225.201
+global (outside) 2 141.85.225.202
+global (outside) 12 141.85.225.212
+global (outside) 21 141.85.225.221
+global (outside) 4 141.85.225.204
+global (outside) 4 141.85.225.205
+global (outside) 14 141.85.225.214
+global (outside) 15 141.85.225.215
+global (outside) 100 interface
+global (outside) 777 141.85.225.232
+global (outside) 777 141.85.225.233
+global (outside) 1 141.85.225.210
+global (management) 100 interface
+nat (outside) 100 10.12.14.0 255.255.255.0 outside
+nat (CATC-CCNA) 15 192.168.254.0 255.255.255.0
+nat (WL) 1 172.16.100.0 255.255.252.0
+nat (PROF_CS) 2 172.16.2.0 255.255.255.0
+nat (PROF_AUTOM) 12 172.16.12.0 255.255.255.0
+nat (DECANAT) 21 172.16.21.0 255.255.255.0
+nat (LABS_CS) 4 172.16.4.0 255.255.252.0
+nat (LABS_AUTOM) 14 172.16.14.0 255.255.254.0
+nat (AWG2012) 777 172.16.77.0 255.255.255.0
+static (LABS_AUTOM,outside) 141.85.225.150 172.16.14.210 netmask 255.255.255.255
+static (PROF_AUTOM,outside) 141.85.225.151 172.16.12.172 netmask 255.255.255.255
+static (LABS_CS,outside) 141.85.225.152 172.16.5.222 netmask 255.255.255.255
+static (CATC-CCNA,outside) 141.85.225.153 192.168.254.251 netmask 255.255.255.255
+access-group incoming in interface outside
+route outside 0.0.0.0 0.0.0.0 141.85.225.1 1
+timeout xlate 3:00:00
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+dynamic-access-policy-record DfltAccessPolicy
+aaa-server TACACS+ protocol tacacs+
+aaa-server TACACS+ (management) host 192.168.137.30
+ key ***********
+aaa authentication ssh console TACACS+ LOCAL
+aaa authentication enable console TACACS+ LOCAL
+aaa authentication serial console TACACS+ LOCAL
+aaa accounting ssh console TACACS+
+aaa accounting telnet console TACACS+
+aaa accounting serial console TACACS+
+aaa accounting command TACACS+
+no snmp-server location
+no snmp-server contact
+snmp-server enable traps snmp authentication linkup linkdown coldstart
+crypto ipsec transform-set TS esp-aes esp-sha-hmac
+crypto ipsec security-association lifetime seconds 28800
+crypto ipsec security-association lifetime kilobytes 4608000
+crypto dynamic-map DYNMAP 10 set transform-set TS
+crypto dynamic-map DYNMAP 10 set security-association lifetime seconds 28800
+crypto dynamic-map DYNMAP 10 set security-association lifetime kilobytes 4608000
+crypto dynamic-map DYNMAP 10 set reverse-route
+crypto map CM 10 ipsec-isakmp dynamic DYNMAP
+crypto map CM interface outside
+crypto isakmp enable outside
+crypto isakmp policy 10
+ authentication pre-share
+ encryption aes
+ hash sha
+ group 2
+ lifetime 86400
+telnet timeout 5
+ssh 141.85.226.77 255.255.255.255 outside
+ssh 192.168.137.0 255.255.255.0 management
+ssh timeout 5
+console timeout 0
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+ntp authentication-key 5 md5 *
+ntp authenticate
+ntp trusted-key 5
+ntp server 192.168.137.77
+group-policy IPSEC_POL internal
+group-policy IPSEC_POL attributes
+ split-tunnel-policy tunnelspecified
+ split-tunnel-network-list value SPLIT_ACL
+ default-domain value cs.pub.ro
+ address-pools value IPSEC_POOL
+username raducostin password ************* encrypted privilege 15
+username admincs password *************** encrypted privilege 15
+tunnel-group IPSEC type remote-access
+tunnel-group IPSEC general-attributes
+ default-group-policy IPSEC_POL
+tunnel-group IPSEC ipsec-attributes
+ pre-shared-key *
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum 512
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map
+  inspect ftp
+  inspect h323 h225
+  inspect h323 ras
+  inspect rsh
+  inspect rtsp
+  inspect esmtp
+  inspect sqlnet
+  inspect skinny
+  inspect sunrpc
+  inspect xdmcp
+  inspect sip
+  inspect netbios
+  inspect tftp
+  inspect icmp
+  inspect http
+  inspect icmp error
+  inspect pptp
+!
+service-policy global_policy global
+prompt hostname context
+Cryptochecksum:2dc4a2c27f69be0cb2ab8e84c6fcb0e7
+: end
+*/

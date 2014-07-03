@@ -45,10 +45,37 @@ r33 = wire_rule "Server0-Fa:out" "Switch2-Fa0/24:in"
 r34 = wire_rule "Switch2-Fa0/24:out" "Server0-Fa:in"
 rules = [r0,r1,r2,r3,r4,r5,r6,r7,r8,r9,r10,r11,r12,r13,r14,r15,r16,r17,r18,r19,r20,r21,r22,r23,r24,r25,r26,r27,r28,r29,r30,r31,r32,r33,r34]
 
+{-
 f1 = ("port" .=. "PC0-Fa:out") .>. finit
 r = lfp_reachability "PC3-Fa:in" f1 rules
 
 f2 = ("port" .=. "Switch2-Fa0/2:in") .>. finit
 r' = lfp_reachability "Switch2-Fa0/3:out" finit rules
-
+-}
 ac = acl "deny" "tcp" "192.168.1.0 255.255.255.0" "" "any" ""
+
+
+f0 = acl "permit" "ip" "any" "" "host 141.85.225.150" ""
+f1 = acl "permit" "icmp" "host 37.128.224.6" "" "any" ""
+f2 = acl "permit" "ip" "any" "" "141.85.228.0 255.255.255.192" ""
+f3 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq ftp"
+f4 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq www"
+f5 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq 5000"
+f6 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq 5001"
+f7 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq https"
+f8 = acl "permit" "tcp" "any" "" "host 141.85.225.152" "eq ssh"
+f9 = acl "permit" "tcp" "any" "" "host 141.85.225.153" ""
+
+r_incoming = let
+ 		 f0 = acl "permit" "ip" "any" "" "host 141.85.225.150" ""
+		 f1 = acl "permit" "icmp" "host 37.128.224.6" "" "any" ""
+		 f2 = acl "permit" "ip" "any" "" "141.85.228.0 255.255.255.192" ""
+		 f3 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq ftp"
+		 f4 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq www"
+		 f5 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq 5000"
+		 f6 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq 5001"
+		 f7 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq https"
+		 f8 = acl "permit" "tcp" "any" "" "host 141.85.225.152" "eq ssh"
+		 f9 = acl "permit" "tcp" "any" "" "host 141.85.225.153" ""
+		in pipeLine (f0:f1:[]) --(f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:[])
+        

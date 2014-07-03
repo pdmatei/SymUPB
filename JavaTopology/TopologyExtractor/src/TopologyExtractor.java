@@ -14,55 +14,6 @@ import com.cisco.pt.ipc.sim.Network;
 import com.cisco.pt.ipc.sim.port.Port;
 import com.cisco.pt.ipc.ui.IPC;
 
-class Wire {
-	private Port p1;
-	private Port p2;
-
-	public Wire (Port p1, Port p2){
-		this.p1 = p1;
-		this.p2 = p2;
-	}
-	@Override
-	public String toString(){
-		return p1.getOwnerDevice().getName()+":"+p1.getName()+" "+p2.getOwnerDevice().getName()+":"+p2.getName();
-	}
-}
-/* models an abstract serializer */
-class ItemWriter {
-	private BufferedWriter bw;
-	public ItemWriter (String src){
-		File f = new File(src);
-		try {
-			// if file doesnt exists, then create it
-			if (!f.exists()) {
-				f.createNewFile();
-			}
-	
-			BufferedWriter bw = new BufferedWriter(new FileWriter(f.getAbsoluteFile()));
-			this.bw = bw;
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-	public void write (String str){
-		try {
-			bw.write(str);
-			bw.newLine();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	public void close (){
-		try {
-			bw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-}
-
 public class TopologyExtractor extends Backpack {
 
 	
