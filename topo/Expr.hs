@@ -39,6 +39,7 @@ instance AsExpression Integer where
         
 instance AsExpression Expr where
     v .=. e = v `Bind` e
+
     
 instance Show Expr where
     show (CVal v) = show v
@@ -46,10 +47,13 @@ instance Show Expr where
     show (CVar v) = v
     show (Cup e e') = "" ++ show e ++" U "++ show e' ++"" 
     show (Interval st end) = "["++ show st ++":"++ show end ++"]"
-    show (TypedInt t st end) = "["++ (getShow t) st ++":"++ (getShow t) end ++"]" -- "("++t++")["++ (getShow t) st ++":"++ (getShow t) end ++"]" 
+--   show (TypedInt t st end) = "["++ (getShow t) st ++"("++show st++"):"++ (getShow t) end ++"("++show end++")]"
+    show (TypedInt t st end) = "["++ (getShow t) st ++":"++ (getShow t) end ++"]" 
     show (Not e) = "Not (" ++ show e ++ ")"
     show Void = "Void"
     show Any = "Any"
+
+
 
 {-
    specialHeaders hold a pair of mappings between headerFieldNames and functions to be called to display them nicely.
@@ -132,7 +136,8 @@ ipMaskToInterval :: String -> String -> Expr
 ipMaskToInterval baseIp mask =
   let
     ip = ipToNumericValue baseIp
-    binaryMask = ipToNumericValue mask--(ipToNumericValue "255.255.255.255") - ((2 ^ (read mask :: Int) - 1) :: NumericValue)
+    binaryMask = (ipToNumericValue mask) - (ipToNumericValue "255.255.255.255")
+    --    binaryMask = ipToNumericValue mask--(ipToNumericValue "255.255.255.255") - ((2 ^ (read mask :: Int) - 1) :: NumericValue)
     lower = ip .&. binaryMask
     upper = ip .|. (complement binaryMask)
   in

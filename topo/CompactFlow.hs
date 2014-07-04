@@ -72,7 +72,7 @@ instance Show CompactFlow where
             showcc (a:b:l) = (show a) ++ ", " ++ (showcc (b:l))
             showcc (a:[]) = show a
             showcc [] = "CFEverything"
-        in showcc bl
+        in showcc bl -- "{"++showcc bl++"}"
     show EmptyCFlow = "{}"
 
    

@@ -8,6 +8,9 @@ import Applications
 import Utils
 import Transf
 
+import qualified Data.Set as Set
+
+
 r0 = gen_switch [("Switch0-Fa0/1","1"),("Switch0-Fa0/2","1"),("Switch0-Fa0/1","5"),("Switch0-Fa0/2","5"),("Switch0-Fa0/22","5"),("Switch0-Fa0/23","5"),("Switch0-Fa0/1","6"),("Switch0-Fa0/2","6"),("Switch0-Fa0/1","99"),("Switch0-Fa0/2","99")] [("1","0009.7ce8.5901","Switch0-Fa0/1"),("1","00e0.8f2e.d002","Switch0-Fa0/2"),("5","0009.7ce8.5901","Switch0-Fa0/1"),("5","00d0.bca7.9546","Switch0-Fa0/23"),("5","00e0.8f2e.d002","Switch0-Fa0/2"),("5","00e0.a3aa.e980","Switch0-Fa0/22"),("6","0009.7ce8.5901","Switch0-Fa0/1"),("6","00e0.8f2e.d002","Switch0-Fa0/2"),("99","0009.7ce8.5901","Switch0-Fa0/1"),("99","00e0.8f2e.d002","Switch0-Fa0/2")]
 r1 = gen_switch [("Switch1-Fa0/3","1"),("Switch1-Fa0/3","5"),("Switch1-Fa0/23","5"),("Switch1-Fa0/24","5"),("Switch1-Fa0/3","6"),("Switch1-Fa0/3","99")] [("1","00e0.8f2e.d003","Switch1-Fa0/3"),("5","000b.be80.c701","Switch1-Fa0/1"),("5","00e0.8f2e.d003","Switch1-Fa0/3"),("6","000b.be80.c701","Switch1-Fa0/1"),("6","00e0.8f2e.d003","Switch1-Fa0/3"),("99","000b.be80.c701","Switch1-Fa0/1"),("99","00e0.8f2e.d003","Switch1-Fa0/3")]
 r2 = gen_switch [("Switch2-Fa0/2","1"),("Switch2-Fa0/3","1"),("Switch2-Fa0/2","5"),("Switch2-Fa0/3","5"),("Switch2-Fa0/24","5"),("Switch2-Fa0/2","6"),("Switch2-Fa0/3","6"),("Switch2-Fa0/2","99"),("Switch2-Fa0/3","99")] [("1","0009.7ce8.5903","Switch2-Fa0/3"),("1","000b.be80.c702","Switch2-Fa0/2"),("5","0009.7ce8.5903","Switch2-Fa0/3"),("6","0009.7ce8.5903","Switch2-Fa0/3"),("99","0009.7ce8.5903","Switch2-Fa0/3")]
@@ -53,7 +56,21 @@ f2 = ("port" .=. "Switch2-Fa0/2:in") .>. finit
 r' = lfp_reachability "Switch2-Fa0/3:out" finit rules
 -}
 ac = acl "deny" "tcp" "192.168.1.0 255.255.255.0" "" "any" ""
+--(Dest-IP := [141.85.225.151:255.255.255.255], Source-IP := [0.0.0.0:37.128.224.5]) U 
+cf0 = ("Dest-IP" .=. (TypedInt "ip" (ipToNumericValue "141.85.225.151") (ipToNumericValue  "255.255.255.255"))) .>. ("Source-IP" .=. (TypedInt "ip" (ipToNumericValue "0.0.0.0") (ipToNumericValue "37.128.224.5"))) .>. finit
 
+cf1 = ("Dest-IP" .=. (TypedInt "ip" (ipToNumericValue "141.85.225.151") (ipToNumericValue  "255.255.255.255"))) .>. cfinit
+cf2 = ("Dest-IP" .=. (TypedInt "ip" (ipToNumericValue "141.85.228.0") (ipToNumericValue  "141.85.228.63"))) .>. cfinit
+cf3 = ("Source-IP" .=. (TypedInt "ip" (ipToNumericValue "0.0.0.0") (ipToNumericValue  "37.128.224.5"))) .>. cfinit
+cf4 = ("proto" .=. "ip") .>. cfinit
+ls = Set.fromList [cf1.>.cf2.>.cf3.>.cf4]
+{-
+weird = cf0 `capp` f2
+ccf1 = head $ Set.toList ls
+ccf2 = head $ Set.toList weird
+
+toList c = let CFlow cfs = c in Set.toList cfs
+-}
 
 f0 = acl "permit" "ip" "any" "" "host 141.85.225.150" ""
 f1 = acl "permit" "icmp" "host 37.128.224.6" "" "any" ""
@@ -77,5 +94,6 @@ r_incoming = let
 		 f7 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq https"
 		 f8 = acl "permit" "tcp" "any" "" "host 141.85.225.152" "eq ssh"
 		 f9 = acl "permit" "tcp" "any" "" "host 141.85.225.153" ""
-		in pipeLine (f0:f1:[]) --(f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:[])
+		in pipeLine (f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:[])
+        
         

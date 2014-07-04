@@ -7,6 +7,7 @@ import Transf
 import Data.Set (Set)
 import Data.List
 import qualified Data.Set as Set
+import Debug.Trace
 
 type Port = String
 
@@ -22,7 +23,7 @@ fromLists :: [[VarBinding]] -> Set (Set VarBinding)
 fromLists ccl = Set.fromList $ map Set.fromList ccl
 
 showfl (Flow id ccl) = 
-    let showcc (x:y:rest) = "(" ++ x ++ ") U " ++ (showcc (y:rest))
+    let showcc (x:y:rest) = "(" ++ x ++ ") U \n" ++ (showcc (y:rest))
         showcc (x:[]) = "(" ++ x ++ ")"
         showcc [] = "Everything"
     in showcc $ Set.toList $ Set.map show ccl   
@@ -176,7 +177,14 @@ instance Ops Flow where
             let merged_cfs = Set.fromList [ cf .>. cf' | cf <- Set.toList cfs, cf' <- Set.toList cfs']
                 r = Set.fold (.>.) finit $ Set.map unify merged_cfs
             in if r == finit then EmptyFlow else r
-
+{-
+capp f@(Flow i cfs) f'@(Flow j cfs') = 
+       let merged_cfs = Set.fromList [ cf .>. cf' | cf <- Set.toList cfs, cf' <- Set.toList cfs']
+           merged_cfl = [ cf .>. cf' | cf <- Set.toList cfs, cf' <- Set.toList cfs']
+           r = Set.fold (.>.) finit $ Set.map unify merged_cfs
+           r' = map unify merged_cfl
+       in merged_cfs--trace ((show merged_cfl)++"\n\n"++(show $ head merged_cfl)) $ if r == finit then EmptyFlow else r
+            -}
 {-
     (*) The reunion of two flows is implemented as:
     f1 .>. f2
@@ -213,16 +221,15 @@ cf_complement cf@(CFlow vbs) =
     let b@(v `Bind` (CVar v')) `op` f = if v' .@. cf then b .>. f else (v `Bind` (Not $ CVar v')) .>. f
         (v `Bind` e) `op` f = case iComplement e of
                                 (Void, Void) -> EmptyFlow
-                                (e', Void) -> ( (v .=.e') .>. finit) `cap` f
-                                (Void, e') -> ( ( v.=.e') .>. finit) `cap` f
-                                (e', e'') -> (((v.=.e') .>. cfinit) .>. ((v.=.e'') .>. cfinit) .>. finit) `cap` f
+                                (e', Void) -> ( (v .=.e') .>. finit) .>. f
+                                (Void, e') -> ( ( v.=.e') .>. finit) .>. f
+                                (e', e'') -> (((v.=.e') .>. cfinit) .>. ((v.=.e'') .>. cfinit) .>. finit) .>. f
     in Set.fold op finit vbs 
 
 -- computes the complement of a flow
 complement :: Flow -> Flow
 complement EmptyFlow = EmptyFlow
--- complement (Flow i cfs) = Set.fold (\cf f-> (cf_complement cf) .>. f) finit cfs 
-complement (Flow i cfs) = Set.fold (\cf f-> (cf_complement cf) `cap` f) finit cfs 
+complement fl@(Flow i cfs) = if fl == finit then EmptyFlow else Set.fold (\cf f-> (cf_complement cf) `cap` f) finit cfs 
 
 
 -- ==================================================================
