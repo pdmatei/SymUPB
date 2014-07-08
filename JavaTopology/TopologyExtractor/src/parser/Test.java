@@ -20,10 +20,32 @@ public class Test {
         ParseTree tree = parser.config(); // begin parsing at init rule
         System.out.println(tree.toStringTree(parser)); // print LISP-style tree
 
+
         ConfigVisitor v = new ConfigVisitor();
         v.visit(tree);
-        for (Map.Entry<String,List<String>> e:v.get_ac_list().entrySet()){
+
+        // building rules from access-list
+        for (Map.Entry<String,List<String>> e:v.get_ac_map().entrySet()){
             System.out.println(v.buildRuleSequence(e.getKey(),e.getValue(),"acl"));
+        }
+        // building the list of interfaces
+        for (Map.Entry<String,Interface> e:v.get_interf_map().entrySet()) {
+            System.out.println(e.getValue());
+        }
+
+        // building "global" instructions
+        for (Map.Entry<String,List<String>> e:v.get_global_map().entrySet()) {
+            System.out.println(e.getKey()+" "+e.getValue());
+        }
+
+        // building "nat" instructions
+        for (Map.Entry<String,Nat> e:v.get_nat_list().entrySet()) {
+            System.out.println(e.getKey()+" "+e.getValue());
+        }
+
+        // building "static" instructions
+        for (Static e:v.get_static_list()) {
+            System.out.println(e);
         }
     }
 }

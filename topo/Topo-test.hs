@@ -94,6 +94,6 @@ r_incoming = let
 		 f7 = acl "permit" "tcp" "any" "" "host 141.85.225.151" "eq https"
 		 f8 = acl "permit" "tcp" "any" "" "host 141.85.225.152" "eq ssh"
 		 f9 = acl "permit" "tcp" "any" "" "host 141.85.225.153" ""
-		in pipeLine (f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:[])
+		in pipeLine (f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:[])--(f0:f1:f2:f3:f4:f5:f6:f7:f8:f9:[])
         
         

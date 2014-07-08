@@ -109,7 +109,6 @@ dns server-group DefaultDNS
  domain-name cs.pub.ro
 same-security-traffic permit intra-interface
 */
-
 access-list nat-ED205 extended permit ip host 172.16.14.210 any
 access-list nat-ED205 extended permit ip any host 172.16.14.210
 access-list nat-ED205 extended permit ip host 141.85.225.150 any
